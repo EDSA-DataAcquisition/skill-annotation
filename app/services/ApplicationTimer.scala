@@ -10,6 +10,8 @@ import scala.concurrent.Future
 import gate.Gate
 import java.io.File
 
+import com.typesafe.config.ConfigFactory
+
 /**
  * This class demonstrates how to run code when the
  * application starts and stops. It starts a timer when the
@@ -34,15 +36,17 @@ class ApplicationTimer @Inject() (clock: Clock, appLifecycle: ApplicationLifecyc
   if (!Gate.isInitialised) {
     Logger.info(s"Initializing GATE...")
 
+    val gate_home = ConfigFactory.load.getString("gate.home")
+
     //step 0:
-    val gateHome = new File("C://Program Files//GATE_Developer_8.4")
+    val gateHome = new File(gate_home)
     Gate.setGateHome(gateHome)
 
     //step 1:
-    val gatePluginsHome = new File("C://Program Files//GATE_Developer_8.4//plugins")
+    val gatePluginsHome = new File(gate_home+"/plugins")
     Gate.setPluginsHome(gatePluginsHome)
 
-    val gateSiteConfig = new File("C://Program Files//GATE_Developer_8.4//gate.xml ")
+    val gateSiteConfig = new File(gate_home+"/gate.xml")
     Gate.setSiteConfigFile(gateSiteConfig)
 
     //step 2: initialize the GATE library
